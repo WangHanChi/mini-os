@@ -9,14 +9,14 @@
 
 int main(void)
 {
-	//printf("Start\n");
-	MYUSART_Init();
-	while(1){
-		char data[1000] = {0};
-		printf("iinput a data!!\n");
-		scanf("%s", data);
-		printf("data = %s\n", data);		
-		fflush(stdin);	/*clear buffer*/
-	}
-	return 0;
+    // printf("Start\n");
+    MYUSART_Init();
+    while (1) {
+        char data[1000] = {0};
+        printf("iinput a data!!\n");
+        scanf("%s", data);
+        printf("data = %s\n", data);
+        fflush(stdin); /*clear buffer*/
+    }
+    return 0;
 }

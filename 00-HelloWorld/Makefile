@@ -70,3 +70,6 @@ putty:
 
 clean:
 	-@rm -r $(OUT)
+
+format:
+	-@clang-format -i Src/*.c Inc/*.h
