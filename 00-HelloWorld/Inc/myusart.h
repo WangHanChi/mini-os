@@ -1,20 +1,19 @@
 /*
- * myusart.h
- *
- *  Created on: 2023年2月8日
- *      Author: hanchi
+ *  Filename   : myusart.h
+ *  Created on : 2023/07/06
+ *  Author     : WangHanChi
  */
 
 #ifndef MYUSART_H_
 #define MYUSART_H_
 #include <stdint.h>
 
-/*板子的頻率*/
+/*Frequency of board*/
 #define DEFAULT_F_CLK	16000000U
-/*板子鮑率*/
+/*Baud rate of board*/
 #define BAUDRATE_38400      38400U
 
-/*RCC 基地址*/
+/*RCC base address*/
 #define RCC_BASEADDRESS 	*(volatile uint32_t*)0x40023800U
 
 ///// AHB1 /////

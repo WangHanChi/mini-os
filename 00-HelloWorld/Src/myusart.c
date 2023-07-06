@@ -1,8 +1,7 @@
 /*
- * myusart.c
- *
- *  Created on: Feb 8, 2023
- *      Author: hanchi
+ *  Filename   : myusart.c
+ *  Created on : 2023/07/06
+ *  Author     : WangHanChi
  */
 
 #include <stdint.h>
