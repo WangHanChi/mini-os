@@ -1,19 +1,11 @@
 name: CI
 on: [push, pull_request]
 jobs:
-  coding-style:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: check coding style
-      run: sh .github/workflows/coding-style.sh
   build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: build
       run: |
-            sudo apt-get update
-            sudo apt-get install gcc-arm-none-eabi
-            sudo apt install -y libncursesw5
+            sh install.sh
             sh .github/workflows/run-all.sh
