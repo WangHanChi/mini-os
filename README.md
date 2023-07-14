@@ -1,8 +1,8 @@
 # mini-os
 
 This is about the mini operating system for STM32f429zi
-
-> [Board](https://www.st.com/en/microcontrollers-microprocessors/stm32f429zi.html)
+> [Note](https://hackmd.io/@wanghanchi/mini-os)  
+> [Device](https://www.st.com/en/microcontrollers-microprocessors/stm32f429zi.html)
 
 ## Implement
 
@@ -19,7 +19,8 @@ This is about the mini operating system for STM32f429zi
 - [ ] Import CMSIS
 - [ ] Wrapper `malloc` with `brk()`
 - [ ] Implement memory allocator
-- [ ] CLI window
+- [ ] CPU scheduler
+- [ ] CLI window (include `scanf`)
 - [ ] Bootloader
 
 ## Reference link 
