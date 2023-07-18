@@ -7,6 +7,12 @@
  */
 #define USART_FLAG_TXE ((uint16_t) 0x0080)
 
+/* USART RXNE Flag
+ * This flag is set to 1 means "Received data is ready to be read."
+ * Set to 0 means "Data is not received"
+ */
+#define USART_FLAG_RXNE ((uint16_t) 0x0020)
+
 /* greet is a global variable
  * This variable will be load by the loader at LMA and will be
  * copy to VMA by startup.c during startup.
@@ -15,7 +21,7 @@
  * because string literal is in .rodata region and is put
  * under the .text region by the linker script
  */
-static char greet[] = "123Hello World!\n\r";
+static char greet[1000] = "This is simple CLI !\n\r";
 
 void print_str(const char *str)
 {
@@ -26,6 +32,39 @@ void print_str(const char *str)
 		/*Waiting for the transmit complete (bit 6 TC)*/
         while (!(*USART3_SR & 0x40))
             ;
+    }
+}
+
+void scan_str(char *str)
+{
+    char received_char;
+    int index = 0;
+
+    while (1)
+    {
+        /* Wait until a character is received (USART_RXNE flag is set) */
+        while (!(*USART3_SR & USART_FLAG_RXNE))
+            ;
+
+        /* Read the received character from USART3_DR */
+        received_char = *USART3_DR & 0xFF;
+
+        /* Clear RXNE by set 0 */
+        *USART3_SR &= ~(USART_FLAG_RXNE);
+
+        /* Check if it is the end of line (Enter key) */
+        if (received_char == '\r')
+        {
+            /* Null-terminate the string and exit the loop */
+            str[index] = '\0';
+            break;
+        }
+
+        /* Store the received character in the buffer */
+        str[index] = received_char;
+
+        /* Increment the index for the next character */
+        index++;
     }
 }
 
@@ -49,6 +88,13 @@ int main(void)
     print_str(greet);
 
     while (1)
-        ;
+    {
+        print_str("Enter >");
+        scan_str(greet);
+        print_str("\n\rYou enter is >> ");
+        print_str(greet);
+        print_str("\n\n\r");
+    }
+    
 	return 0;
 }
