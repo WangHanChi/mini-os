@@ -53,7 +53,7 @@ void main(void)
 	/* SysTick configuration */
 	*SYSTICK_RVR = 7200000;
 	*SYSTICK_CVR = 0;
-	*SYSTICK_CSR = 0x07;
+	*SYSTICK_CSR = 0x03;
 
 	while (1); /* wait */
 }
