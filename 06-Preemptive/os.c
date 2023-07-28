@@ -15,11 +15,11 @@
  */
 #define USART_FLAG_TXE	((uint16_t) 0x0080)
 
-/* 72MHz */
-#define CPU_CLOCK_HZ 72000000
+/* 16MHz */
+#define CPU_CLOCK_HZ 16000000
 
-/* 100 ms per tick. */
-#define TICK_RATE_HZ 10
+/* 500 ms per tick. */
+#define TICK_RATE_HZ 2
 
 void usart_init(void)
 {
@@ -60,7 +60,7 @@ void print_str(const char *str)
 
 void delay(volatile int count)
 {
-	count *= 50000;
+	count *= 5000;
 	while (count--);
 }
 
@@ -98,7 +98,7 @@ void task1_func(void)
 	syscall();
 	while (1) {
 		print_str("task1: Running...\n");
-		delay(1000);
+		delay(500);
 	}
 }
 
