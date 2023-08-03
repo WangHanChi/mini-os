@@ -3,11 +3,10 @@
 #include "malloc.h"
 #include "cli.h"
 
-
-
 int main(void)
 {
     usart_init();
+
     struct File_Structure foo;
     foo.cwd = (Dirname)malloc(2); // Initialize cwd to "/"
     strcpy(foo.cwd, "/");
@@ -23,7 +22,7 @@ int main(void)
     char arg[100];
 
     int count = 1;
-
+restart:
     while (1) {
         myprintf("\r%d>%s-> ", count++, foo.cwd);
 
@@ -43,6 +42,14 @@ int main(void)
             sscanf_str(line, "%s %s", cmd, arg);
             rmdir(&foo, arg);
         } else if (strcmp(cmd, "quit") == 0 || strcmp(cmd, "exit") == 0) {
+            myprintf("ShutDown !!\n\r");
+            while(1){
+                myprintf("If you want to restart, please enter 'r'\n\r");
+                char check;
+                scan_str(&check);
+                if(check == 'r')
+                    goto restart;
+            }
             free(foo.cwd);
             struct list_head* iter, * next;
             struct DirNode* node;
@@ -50,8 +57,7 @@ int main(void)
                 node = list_entry(iter, struct DirNode, list);
                 free(node->dir_name);
                 free(node);
-            }
-            return 0;
+            }      
         }
     }
 	return 0;

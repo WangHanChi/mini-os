@@ -113,7 +113,6 @@ void cd(struct File_Structure* fs, const char* dir)
                 size_t new_size = strlen(fs->cwd) + strlen(dir) + 2; // +2 for '/' and '\0'
                 free(fs->cwd);
                 fs->cwd = (Dirname)malloc(new_size);
-                // fs->cwd = (Dirname)realloc(fs->cwd, new_size); Not support realloc
                 if (strcmp(fs->cwd, "/") == 0) {
                     strcpy(fs->cwd, dir);
                 } else {

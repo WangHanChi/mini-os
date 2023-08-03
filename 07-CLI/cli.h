@@ -17,7 +17,6 @@ struct File_Structure {
     struct list_head dir_tree; // Head of the doubly-linked list
 };
 
-
 void mkdir(struct File_Structure* fs, const char* new_dir);
 void rmdir(struct File_Structure* fs, const char* old_dir);
 void ls(struct File_Structure* fs);
