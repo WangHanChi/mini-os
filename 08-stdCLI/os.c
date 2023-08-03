@@ -107,6 +107,7 @@ int main(void)
     int count = 1;
 
     while (1) {
+restart:
         printf("\r%d>%s-> ", count++, foo.cwd);
         fgets(line, sizeof(line), stdin);
         fflush(stdin); /*clear buffer*/
@@ -124,6 +125,15 @@ int main(void)
             sscanf(line, "%*s %s", arg);
             rmdir(&foo, arg);
         } else if (strcmp(cmd, "quit") == 0 || strcmp(cmd, "exit") == 0) {
+            printf("ShutDown !!\n\r");
+            while(1){
+                printf("If you want to restart, please enter 'r'\n\r");
+                char check;
+                scanf("%c", &check);
+                if(check == 'r')
+                    goto restart;
+                fflush(stdin);
+            }
             free(foo.cwd);
             struct list_head* iter, * next;
             struct DirNode* node;
