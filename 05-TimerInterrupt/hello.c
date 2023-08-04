@@ -6,6 +6,8 @@
  * set when that data is transferred to the TDR
  */
 #define USART_FLAG_TXE	((uint16_t) 0x0080)
+extern uint32_t DEFAULT_F_CLK;
+extern uint32_t BAUDRATE;
 
 void usart_init(void)
 {
@@ -22,7 +24,7 @@ void usart_init(void)
     *(USART3_CR1)       |= (0x01 << 2);
     *(USART3_CR1)       |= (0x01 << 3);
     *(USART3_CR1)       |= (0x01 << 13);
-    *(USART3_BRR)       = DEFAULT_F_CLK / BAUDRATE_38400;
+    *(USART3_BRR)       = DEFAULT_F_CLK / BAUDRATE;
 }
 
 void print_str(const char *str)
@@ -51,7 +53,7 @@ void main(void)
 	print_str("Hello world!\n");
 
 	/* SysTick configuration */
-	*SYSTICK_RVR = 7200000;
+	*SYSTICK_RVR = 18000000;
 	*SYSTICK_CVR = 0;
 	*SYSTICK_CSR = 0x03;
 

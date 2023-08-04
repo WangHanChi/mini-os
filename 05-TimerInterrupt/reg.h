@@ -45,15 +45,16 @@
 #define USART3_CR3      ((__REG) (USART3 + 0x14))
 #define USART3_GTPR     ((__REG) (USART3 + 0x18))
 
-/* frequency of stm32 board */
-#define DEFAULT_F_CLK 8000000U
-#define BAUDRATE_38400 38400U
-
 /* SysTick Memory Map */
 #define SYSTICK		    ((__REG_TYPE) 0xE000E010)
 #define SYSTICK_CSR	    ((__REG) (SYSTICK + 0x00))
 #define SYSTICK_RVR 	((__REG) (SYSTICK + 0x04))
 #define SYSTICK_CVR	    ((__REG) (SYSTICK + 0x08))
 #define SYSTICK_CALIB	((__REG) (SYSTICK + 0x0C))
+
+/* Power Control Register */
+#define PWR		        ((__REG_TYPE) 0x40007000)
+#define PWR_CR	        ((__REG) (PWR + 0x00))
+#define PWR_CSR	        ((__REG) (PWR + 0x04))
 
 #endif
