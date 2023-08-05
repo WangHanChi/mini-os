@@ -3,6 +3,11 @@
 
 #define NULL 0
 
+/* This file is to copy the function in glibc and
+ * implement for the stm32f429 board. */
+
+
+/* print the char, similar to 'putchar' */
 void print_char(char c)
 {
     while (!(*USART3_SR & USART_FLAG_TXE))
@@ -12,6 +17,7 @@ void print_char(char c)
         ;
 }
 
+/* use print_char to warpper puts */
 void print_str(const char *str)
 {
     while (*str) {
@@ -20,12 +26,13 @@ void print_str(const char *str)
     }
 }
 
+/* scan the stdin for user keyin */
 void scan_str(char *str)
 {
     char received_char;
     int index = 0;
 
-    // Clear input buffer
+    /* Clear input buffer */
     while ((*USART3_SR & USART_FLAG_RXNE))
     {
         received_char = *USART3_DR & 0xFF;
@@ -59,6 +66,7 @@ void scan_str(char *str)
     }
 }
 
+/* enable the usart for the communication with host */
 void usart_init(void)
 {
     *(RCC_AHB1ENR)      |= (uint32_t) (0x01 << 3);
@@ -77,6 +85,7 @@ void usart_init(void)
     *(USART3_BRR)       = DEFAULT_F_CLK / BAUDRATE_38400;
 }
 
+/* Get string lebgth */
 int strlen(const char *str)
 {
     int i = 0;
@@ -85,6 +94,7 @@ int strlen(const char *str)
     return i;
 }
 
+/* wrap print_str to printf */
 void myprintf(const char *format, ...)
 {
     va_list args;
