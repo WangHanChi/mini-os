@@ -229,12 +229,12 @@ void PLL_Init()
     *RCC_CFGR |=  (0b100 << 13);
 
     /* Set System clock 180Mhz, and APB1 Max Freq is 45Mhz */
-    DEFAULT_F_CLK = (180000000 / 8);
+    DEFAULT_F_CLK = (180000000 / 4);
     BAUDRATE = 38400U;
 
-    /* APB 1 Div = 8  */
+    /* APB 1 Div = 4  */
     *RCC_CFGR &= ~(0b111 << 10);
-    *RCC_CFGR |=  (0b110 << 10);
+    *RCC_CFGR |=  (0b101 << 10);
 
     /* SET PLL ON  */
     *RCC_CR |= (1 << 24);
