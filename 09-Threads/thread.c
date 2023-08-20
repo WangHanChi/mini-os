@@ -81,6 +81,7 @@ void __attribute__((naked)) thread_start()
 	 */
 	asm volatile("ldr pc, [sp, #24]\n");
 
+	print_str("Oh, no, reach thread start end!\n\r");
 	/* Never reach here */
 	while(1);
 }

@@ -52,11 +52,10 @@ static void delay(volatile int count)
 	while (count--);
 }
 
-static void busy_loop(void *str)
+void busy_loop(void *str)
 {
 	while (1) {
 		print_str(str);
-        print_str("hello\n");
 		print_str(": Running...\n");
 		delay(300);
 	}
@@ -84,11 +83,11 @@ void test3(void *userdata)
 #define CPU_CLOCK_HZ 8000000
 
 /* 100 ms per tick. */
-#define TICK_RATE_HZ 1
+#define TICK_RATE_HZ 10
 
 int main(void)
 {
-	const char *str1 = "Task1", *str2 = "Task2", *str3 = "Task3";
+	const char *str1 = "Task1\n\r", *str2 = "Task2\n\r", *str3 = "Task3\n\r";
 
 	usart_init();
 

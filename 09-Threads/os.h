@@ -5,4 +5,7 @@
 #define STACK_SIZE 256
 #define MAX_HEAPS 4096
 
+void print_str(const char *str);
+
+
 #endif
