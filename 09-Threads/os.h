@@ -3,7 +3,7 @@
 
 #define MAX_TASKS 10
 #define STACK_SIZE 256
-#define MAX_HEAPS 4096
+#define MAX_HEAPS 40960
 
 void print_str(const char *str);
 

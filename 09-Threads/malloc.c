@@ -2,23 +2,27 @@
 #include "malloc.h"
 #include "os.h"
 
-typedef long Align;
+typedef struct chunk {
+    struct chunk *next;
+    struct chunk *prev;
+    int size;
+    void *ptr;
+} chunk_t;
 
-union header {
-	struct {
-		union header *ptr;
-		unsigned int size;
-	} s;
-	Align x;
-};
-
-typedef union header Header;
+#define OFFSET (sizeof(chunk_t) - sizeof(void*))
+#define ALGIN 8
 
 static unsigned char heaps[MAX_HEAPS];
 static unsigned char *program_break = heaps;
 
-static Header base; /* empty list to get started */
-static Header *freep = NULL; /* start of free list */
+static chunk_t *head = NULL;
+static chunk_t *freelist = NULL;
+
+static inline int align_up(int size)
+{
+    int mask = ALGIN - 1;
+    return ((size - 1) | mask) + 1;
+}
 
 static void *sbrk(unsigned int nbytes)
 {
@@ -31,69 +35,79 @@ static void *sbrk(unsigned int nbytes)
 	return (void *) -1;
 }
 
-void *malloc(unsigned int nbytes)
+void *malloc(unsigned int size)
 {
-	Header *p, *prevp;
-	unsigned int nunits;
-	void *cp;
+	if(size == 0)
+		return NULL;
 
-	nunits = (nbytes + sizeof(Header) - 1) / sizeof(Header) + 1;
+	size = align_up(size);
 
-	if ((prevp = freep) == NULL) {
-		base.s.ptr = freep = prevp = &base;
-		base.s.size = 0;
-	}
+    if(!head){
+        chunk_t *tmp = sbrk(align_up(sizeof(chunk_t)));
 
-	for (p = prevp->s.ptr; ; prevp = p, p = p->s.ptr) {
-		if (p->s.size >= nunits) {
-			if (p->s.size == nunits) {
-				prevp->s.ptr = p->s.ptr;
-			} else {
-				p->s.size -= nunits;
-				p += p->s.size;
-				p->s.size = nunits;
-			}
-			freep = prevp;
-			return (void *)(p + 1);
-		}
+        head = tmp;
+        head->next = NULL;
+        head->prev = NULL;
+        head->ptr = NULL;
+        head->size = 0;
+    }
 
-		if (p == freep) {
-			cp = sbrk(nunits * sizeof(Header));
-			if (cp == (void *) -1) {
-				return NULL;
-			} else {
-				p = (Header *) cp;
-				p->s.size = nunits;
-				free((void *) (p + 1));
-				p = freep;
-			}
-		}
-	}
+    if(!freelist){
+        chunk_t *tmp = sbrk(align_up(sizeof(chunk_t)));
+
+        freelist = tmp;
+        freelist->next = NULL;
+        freelist->prev = NULL;
+        freelist->ptr = NULL;
+        freelist->size = 0;
+    }
+	
+	chunk_t *cur = head;
+	while(cur->next)
+		cur = cur->next;
+
+    chunk_t *alloc = sbrk(size);
+	if(!alloc)
+		return NULL;
+
+	cur->next = alloc;
+	alloc->prev = cur;
+
+	cur = alloc;
+	cur->next = NULL;
+	cur->size = size;
+	cur->ptr = cur + OFFSET;
+
+	return cur->ptr;
 }
 
-void free(void *ap)
+void free(void *ptr)
 {
-	Header *bp, *p;
-	bp = (Header *) ap - 1;
+	if(ptr == NULL)
+		return;
 
-	for (p = freep; !(bp > p && bp < p->s.ptr); p = p->s.ptr) {
-		if (p >= p->s.ptr && (bp > p || bp < p->s.ptr))
-			break;
-	}
+	chunk_t *cur = head;
 
-	if (bp + bp->s.size == p->s.ptr) {
-		bp->s.size += p->s.ptr->s.size;
-		bp->s.ptr = p->s.ptr->s.ptr;
-	} else {
-		bp->s.ptr = p->s.ptr;
-	}
+	while(cur->ptr != ptr)
+		 cur = cur->next;
+	
+	chunk_t *prev;
+    if (cur->prev != NULL) {
+        prev = cur->prev;
+        prev->next = cur->next;
+    } else
+        head = cur->next;
 
-	if (p + p->s.size == bp) {
-		p->s.size += bp->s.size;
-		p->s.ptr = bp->s.ptr;
-	} else {
-		p->s.ptr = bp;
-	}
+    chunk_t *next;
+    if (cur->next != NULL) {
+        next = cur->next;
+        next->prev = cur->prev;
+    } else
+        prev->next = NULL;
 
-	freep = p;
+	/* Insert Head in freelist_head */
+    cur->next = freelist;
+    cur->prev = NULL;
+    freelist->prev = cur;
+    freelist = cur;
 }
