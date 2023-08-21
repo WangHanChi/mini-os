@@ -66,9 +66,54 @@ void *malloc(unsigned int size)
 	while(cur->next)
 		cur = cur->next;
 
-    chunk_t *alloc = sbrk(size);
-	if(!alloc)
-		return NULL;
+    chunk_t *best_fit_chunk = NULL;
+    chunk_t *alloc;
+
+    if (!freelist->next) {
+        /* If no more chunks in the free chunk list,
+           allocate best_fit_chunk as NULL. */
+        alloc = best_fit_chunk;
+    } else {
+        chunk_t *fh = freelist;
+        /* record the size of the chunk */
+        int bsize = 0;
+
+        while (fh->next) {
+            if (fh->size >= size && !best_fit_chunk) {
+                /* first time setting fh as best_fit_chunk */
+                best_fit_chunk = fh;
+                bsize = fh->size;
+            } else if (fh->size >= size && best_fit_chunk &&
+                       (fh->size < bsize)) {
+                /* If there is a smaller chunk available,
+                   replace it with this. */
+                best_fit_chunk = fh;
+                bsize = fh->size;
+            }
+            fh = fh->next;
+        }
+
+        /* a suitable chunk has been found */
+        if (best_fit_chunk) {
+            /* remove the chunk from the freelist */
+            if (best_fit_chunk->prev) {
+                chunk_t *tmp = best_fit_chunk->prev;
+                tmp->next = best_fit_chunk->next;
+            } else
+                freelist = best_fit_chunk->next;
+
+            if (best_fit_chunk->next) {
+                chunk_t *tmp = best_fit_chunk->next;
+                tmp->prev = best_fit_chunk->prev;
+            }
+        }
+        alloc = best_fit_chunk;
+    }
+
+	if(!alloc){
+        alloc = sbrk(size);
+        alloc->size = size;
+    }
 
 	cur->next = alloc;
 	alloc->prev = cur;
