@@ -5,7 +5,7 @@ do
   if [ -d "$dir" ]
   then
     cd "$dir" || exit 1
-    make
+    make bin
     make clean
     cd ..
   fi

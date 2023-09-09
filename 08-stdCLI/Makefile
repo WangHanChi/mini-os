@@ -7,7 +7,7 @@ CFLAGS = -fno-common -ffreestanding -O0 -std=gnu99 \
 	 --specs=nosys.specs \
 
 TARGET= os
-all: clean $(TARGET)
+bin: clean $(TARGET)
 
 $(TARGET): os.c startup.c cli.c syscalls.c
 	$(CC) $(CFLAGS) $^ -o $(TARGET)
