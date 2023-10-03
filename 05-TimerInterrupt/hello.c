@@ -52,8 +52,10 @@ void main(void)
 
 	print_str("Hello world!\n");
 
-	/* SysTick configuration */
-	*SYSTICK_RVR = 18000000;
+	/* SysTick configuration
+     * Set one second tick 1000 times
+     */
+	*SYSTICK_RVR = 180000000 / 1000;
 	*SYSTICK_CVR = 0;
 	*SYSTICK_CSR = 0x03;
 
