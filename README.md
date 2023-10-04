@@ -12,15 +12,14 @@ This is about the mini operating system for STM32f429zi
 - Context switch
 - Interrupt from Timer
 - Preemept
-
+- Wrapper `malloc` with `brk()`
+- Implement memory allocator
+- CLI window (include `scanf`)
 
 ## TODO
 
 - [ ] Import CMSIS
-- [ ] Wrapper `malloc` with `brk()`
-- [ ] Implement memory allocator
-- [ ] CPU scheduler
-- [ ] CLI window (include `scanf`)
+- [ ] Task scheduler
 - [ ] Bootloader
 
 ## Reference link 
