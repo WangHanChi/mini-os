@@ -8,6 +8,7 @@
 #define USART_FLAG_TXE	((uint16_t) 0x0080)
 extern uint32_t DEFAULT_F_CLK;
 extern uint32_t BAUDRATE;
+static uint32_t ticks = 0;
 
 void usart_init(void)
 {
@@ -55,9 +56,9 @@ void main(void)
 	/* SysTick configuration
      * Set one second tick 1000 times
      */
-	*SYSTICK_RVR = 180000000 / 1000;
+	*SYSTICK_RVR = 180000000 / 100;
 	*SYSTICK_CVR = 0;
-	*SYSTICK_CSR = 0x03;
+	*SYSTICK_CSR = 0x07;
 
 	while (1); /* wait */
 }
@@ -65,4 +66,9 @@ void main(void)
 void __attribute__((interrupt)) systick_handler(void)
 {
 	print_str("Interrupt from System Timer\n");
+    if(ticks == 1000){
+        print_str("!!!!   ~~~    10 sec pass  ~~~  !!!!\n\r");
+        ticks = 0;
+    }
+    ticks++;
 }
