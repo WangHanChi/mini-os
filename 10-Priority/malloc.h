@@ -3,5 +3,6 @@
 
 void *malloc(unsigned int nbytes);
 void free(void *ap);
+int free_all();
 
 #endif
